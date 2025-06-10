@@ -2,6 +2,7 @@ package com.example.newsfeedproject.domain.user;
 
 import com.example.newsfeedproject.domain.user.dto.SignUpUserRequestDto;
 import com.example.newsfeedproject.domain.user.dto.SignUpUserResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<SignUpUserResponseDto> signup (@RequestBody SignUpUserRequestDto requestDto){
+    public ResponseEntity<SignUpUserResponseDto> signup (@RequestBody @Valid SignUpUserRequestDto requestDto){
         SignUpUserResponseDto signUpUserResponseDto =
                 userService.signup(
                         requestDto.getEmail(), requestDto.getPassword()

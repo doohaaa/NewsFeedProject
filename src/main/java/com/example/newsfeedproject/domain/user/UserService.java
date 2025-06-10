@@ -13,6 +13,11 @@ public class UserService {
 
     public SignUpUserResponseDto signup(String email, String password){
         User user = new User(email, password);
+
+        if(userRepository.existsByEmail(email)){
+            throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
+        }
+
         User signupUser = userRepository.save(user);
         return new SignUpUserResponseDto(signupUser.getId(),signupUser.getEmail());
 
