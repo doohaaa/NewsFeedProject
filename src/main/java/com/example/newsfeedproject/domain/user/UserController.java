@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
+import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ public class UserController {
 
     private final UserService userService;
 
+    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<SignUpUserResponseDto> signup (@RequestBody @Valid SignUpUserRequestDto requestDto){
         SignUpUserResponseDto signUpUserResponseDto =
@@ -29,6 +32,7 @@ public class UserController {
         return new ResponseEntity<>(signUpUserResponseDto, HttpStatus.CREATED);
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest servletRequest){
         // 사용자 인증
@@ -44,6 +48,7 @@ public class UserController {
         return ResponseEntity.ok(Map.of("message", "로그인 성공", "sessionId", sessionId, "user", loginResponseDto));
     }
 
+    // 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<Object> logout(HttpServletRequest servletRequest){
         HttpSession session = servletRequest.getSession(false);
@@ -55,6 +60,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 프로필 생성
     @PostMapping("/profile")
     public ResponseEntity<CreateProfileResponseDto> createProfile (
             @RequestBody @Valid CreateProfileRequestDto requestDto,
@@ -69,4 +75,12 @@ public class UserController {
         return new ResponseEntity<>(createProfileResponseDto, HttpStatus.CREATED);
     }
 
+    // 프로필 조회 -> 오류 생김
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<ProfileResponseDto> findByUserId(@PathVariable Long id){
+
+        // userService 에서 userId로 프로필 조회
+        ProfileResponseDto profileResponseDto = userService.findByUserId(id);
+        return new ResponseEntity<>(profileResponseDto, HttpStatus.OK);
+    }
 }
