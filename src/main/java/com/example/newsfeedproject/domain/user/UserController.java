@@ -1,22 +1,18 @@
 package com.example.newsfeedproject.domain.user;
 
-import com.example.newsfeedproject.domain.user.dto.LoginRequestDto;
-import com.example.newsfeedproject.domain.user.dto.LoginResponseDto;
-import com.example.newsfeedproject.domain.user.dto.SignUpUserRequestDto;
-import com.example.newsfeedproject.domain.user.dto.SignUpUserResponseDto;
+import com.example.newsfeedproject.domain.user.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -57,6 +53,20 @@ public class UserController {
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/profile")
+    public ResponseEntity<CreateProfileResponseDto> createProfile (
+            @RequestBody @Valid CreateProfileRequestDto requestDto,
+            @SessionAttribute(name="user")LoginResponseDto loginResponseDto
+            ){
+        CreateProfileResponseDto  createProfileResponseDto =
+                userService.createProfile(
+                        loginResponseDto.getId(), requestDto.getName(), requestDto.getInfo()
+                );
+
+        // log.info("{}",loginResponseDto);
+        return new ResponseEntity<>(createProfileResponseDto, HttpStatus.CREATED);
     }
 
 }

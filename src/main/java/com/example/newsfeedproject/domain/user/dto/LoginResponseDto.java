@@ -2,9 +2,11 @@ package com.example.newsfeedproject.domain.user.dto;
 
 import com.example.newsfeedproject.domain.user.entity.User;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
+@ToString // log값 확인용
 @Getter
 public class LoginResponseDto implements Serializable{
     private Long id;

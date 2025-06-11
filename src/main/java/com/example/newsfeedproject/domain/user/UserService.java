@@ -1,9 +1,11 @@
 package com.example.newsfeedproject.domain.user;
 
 import com.example.newsfeedproject.config.PasswordEncoder;
+import com.example.newsfeedproject.domain.user.dto.CreateProfileResponseDto;
 import com.example.newsfeedproject.domain.user.dto.LoginResponseDto;
 import com.example.newsfeedproject.domain.user.dto.SignUpUserResponseDto;
 import com.example.newsfeedproject.domain.user.entity.User;
+import com.example.newsfeedproject.domain.user.entity.UserProfile;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProfileRepository profileRepository;
 
     public SignUpUserResponseDto signup(String email, String password){
         // User user = new User(email, password);
@@ -41,4 +44,11 @@ public class UserService {
         return LoginResponseDto.of(user);
     }
 
+    public CreateProfileResponseDto createProfile(Long userId, String name, String info){
+        UserProfile profile = new UserProfile(name, info, userId);
+        UserProfile savedprofile = profileRepository.save(profile);
+
+        return new CreateProfileResponseDto(savedprofile.getId(), savedprofile.getName(), savedprofile.getInfo());
+
+    }
 }
