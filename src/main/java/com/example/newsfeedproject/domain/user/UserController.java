@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -33,12 +35,17 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest servletRequest){
+        // 사용자 인증
         final LoginResponseDto loginResponseDto = userService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
 
-        final HttpSession session = servletRequest.getSession();
-        session.setAttribute("user", loginResponseDto);
+        // 세션 생성 및 저장
+        final HttpSession session = servletRequest.getSession(); // 세션 없으면 생성
+        session.setAttribute("user", loginResponseDto); // 유저 정보를 세션에 저장
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        // session id 반환
+        String sessionId = session.getId();
+
+        return ResponseEntity.ok(Map.of("message", "로그인 성공", "sessionId", sessionId, "user", loginResponseDto));
     }
 
     @PostMapping("/logout")
