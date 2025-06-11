@@ -1,4 +1,4 @@
-package com.example.newsfeedproject.domain.user;
+package com.example.newsfeedproject.domain.user.constraint;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;

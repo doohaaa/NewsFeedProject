@@ -1,5 +1,6 @@
 package com.example.newsfeedproject.domain.user.dto;
 
+import com.example.newsfeedproject.domain.user.constraint.ValidPassword;
 import lombok.Getter;
 import jakarta.validation.constraints.*;
 
@@ -9,9 +10,11 @@ public class SignUpUserRequestDto {
     @NotBlank(message = "이메일은 필수 입력 항목입니다.")
     @Email(message = "올바른 이메일 형식이 아닙니다.")
     private final String email;
+
+    @ValidPassword
     private final String password;
 
-    public SignUpUserRequestDto(String email, String password){
+    public SignUpUserRequestDto(String email, String password) {
         this.email = email;
         this.password = password;
     }
