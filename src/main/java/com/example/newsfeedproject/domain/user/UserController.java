@@ -1,7 +1,11 @@
 package com.example.newsfeedproject.domain.user;
 
+import com.example.newsfeedproject.domain.user.dto.LoginRequestDto;
+import com.example.newsfeedproject.domain.user.dto.LoginResponseDto;
 import com.example.newsfeedproject.domain.user.dto.SignUpUserRequestDto;
 import com.example.newsfeedproject.domain.user.dto.SignUpUserResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +22,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<SignUpUserResponseDto> signup (@RequestBody @Valid SignUpUserRequestDto requestDto){
         SignUpUserResponseDto signUpUserResponseDto =
                 userService.signup(
@@ -27,5 +31,25 @@ public class UserController {
         return new ResponseEntity<>(signUpUserResponseDto, HttpStatus.CREATED);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest servletRequest){
+        final LoginResponseDto loginResponseDto = userService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+
+        final HttpSession session = servletRequest.getSession();
+        session.setAttribute("user", loginResponseDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(HttpServletRequest servletRequest){
+        HttpSession session = servletRequest.getSession(false);
+
+        if(session != null){
+            session.invalidate();
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

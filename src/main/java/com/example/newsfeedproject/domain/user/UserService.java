@@ -1,9 +1,11 @@
 package com.example.newsfeedproject.domain.user;
 
 import com.example.newsfeedproject.config.PasswordEncoder;
+import com.example.newsfeedproject.domain.user.dto.LoginResponseDto;
 import com.example.newsfeedproject.domain.user.dto.SignUpUserResponseDto;
 import com.example.newsfeedproject.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,4 +27,17 @@ public class UserService {
         return new SignUpUserResponseDto(signupUser.getId(),signupUser.getEmail());
 
     }
+
+
+    public LoginResponseDto login(String email, String password){
+        final User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new IllegalIdentifierException("User not found. email = "+email));
+
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new IllegalArgumentException("Password is incorrect. email ="+ email);
+        }
+
+        return LoginResponseDto.of(user);
+    }
+
 }
