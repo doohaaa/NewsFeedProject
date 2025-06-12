@@ -50,5 +50,6 @@
 https://documenter.getpostman.com/view/44720808/2sB2x5JYZE
 
 **ERD**
+![image](https://github.com/user-attachments/assets/55581d9c-6011-477d-a739-94a4317cd469)
 
 
